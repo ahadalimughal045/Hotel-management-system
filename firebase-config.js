@@ -1,14 +1,15 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, updatePassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+
 const firebaseConfig = {
-  apiKey: "AIzaSyBoL_nqVErjMKpI_VY4vwpW-aP7L0OZ-D0",
-  authDomain: "hotel-project-ace4f.firebaseapp.com",
-  projectId: "hotel-project-ace4f",
-  storageBucket: "hotel-project-ace4f.firebasestorage.app",
-  messagingSenderId: "312993280496",
-  appId: "1:312993280496:web:2ca5ae247de7ffbec0ed35",
-  measurementId: "G-ZEHNEJ4ZRY"
+  apiKey: "AIzaSyA7Uyd0k4rVgqRx6jdeSTvXJlNuowSbZx4",
+  authDomain: "hotel-admin-807a3.firebaseapp.com",
+  projectId: "hotel-admin-807a3",
+  storageBucket: "hotel-admin-807a3.firebasestorage.app",
+  messagingSenderId: "569594137457",
+  appId: "1:569594137457:web:1cdb773e369fccb94784d0",
+  measurementId: "G-457WQG4RQK"
 };
 
 const app = initializeApp(firebaseConfig);
