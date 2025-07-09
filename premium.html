@@ -7,6 +7,20 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url(/img/bg2.jpg ); /* 👈 image path */
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.3;  /* 👈 Only this background will be transparent */
+      z-index: -1;   /* 👈 Ensure it stays behind everything */
+    }
     body {
       background: hsl(42, 36%, 89%);
       padding: 20px;

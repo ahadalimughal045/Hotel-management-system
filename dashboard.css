@@ -4,6 +4,20 @@
       box-sizing: border-box;
       font-family:  'Baloo Bhai 2', 'Segoe UI', Arial, sans-serif;
     }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url(/img/bg.jpg     ); /* 👈 image path */
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.3;  /* 👈 Only this background will be transparent */
+      z-index: -1;   /* 👈 Ensure it stays behind everything */
+    }
     body {
       background:hwb(41 85% 7%);
       color: hsl(36, 5%, 19%);

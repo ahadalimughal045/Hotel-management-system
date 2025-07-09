@@ -4,7 +4,7 @@ body {
   font-family:  'Baloo Bhai 2', cursive, 'Segoe UI', Arial, sans-serif;
   background: hwb(41 85% 7%);
   color: hsl(36, 5%, 19%);
-  min-height: 100vh;
+  min-height: 100vh;  
   display: flex;
   align-items: center;
   justify-content: center;
