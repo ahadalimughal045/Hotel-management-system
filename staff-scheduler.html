@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Auto Staff Scheduler</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #F0F4F7;
+      padding: 20px;
+    }
+
+    h2 {
+      color: #1F5E56;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+    }
+
+    button {
+      margin: 20px auto;
+      display: block;
+      padding: 10px 20px;
+      background-color: #1F5E56;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #154842;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+
+    th {
+      background-color: #1F5E56;
+      color: white;
+    }
+
+    td {
+      background-color: #ffffff;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #888;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>AI-Based Auto Staff Scheduler</h2>
+    <button onclick="generateSchedule()">Generate Weekly Schedule</button>
+
+    <table id="schedule-table">
+      <thead>
+        <tr>
+          <th>Staff Name</th>
+          <th>Role</th>
+          <th>Day</th>
+          <th>Shift</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Rows inserted by JavaScript -->
+      </tbody>
+    </table>
+
+    <div class="footer">Auto-generated based on staff availability & AI logic</div>
+  </div>
+
+  <script>
+    const staffData = [
+      { name: "Ali", role: "Receptionist", availability: ["Morning", "Evening"] },
+      { name: "Sara", role: "Housekeeping", availability: ["Morning"] },
+      { name: "John", role: "Cook", availability: ["Evening", "Night"] },
+      { name: "Amna", role: "Security", availability: ["Night"] },
+      { name: "David", role: "Receptionist", availability: ["Morning", "Night"] },
+      { name: "Mina", role: "Cleaner", availability: ["Morning", "Evening"] },
+      { name: "Kamran", role: "Chef", availability: ["Evening"] }
+    ];
+
+    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    const shifts = ["Morning", "Evening", "Night"];
+
+    function generateSchedule() {
+      const tbody = document.querySelector("#schedule-table tbody");
+      tbody.innerHTML = "";
+
+      for (let day of days) {
+        for (let shift of shifts) {
+          const availableStaff = staffData.filter(s => s.availability.includes(shift));
+          if (availableStaff.length === 0) continue;
+
+          const selected = availableStaff[Math.floor(Math.random() * availableStaff.length)];
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${selected.name}</td>
+            <td>${selected.role}</td>
+            <td>${day}</td>
+            <td>${shift}</td>
+          `;
+          tbody.appendChild(row);
+        }
+      }
+    }
+  </script>
+</body>
+</html>

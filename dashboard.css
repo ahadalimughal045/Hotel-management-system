@@ -101,6 +101,23 @@
       transition: transform 0.4s ease, opacity 0.4s ease;
       z-index: 10;
     }
+.staff-btn {
+  background: linear-gradient(90deg, #BC984E 60%, #879681 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(188, 152, 78, 0.08);
+  margin-right: 10px; /* spacing between buttons */
+}
+.staff-btn:hover {
+  background: linear-gradient(90deg, #879681 60%, #BC984E 100%);
+  box-shadow: 0 4px 16px rgba(188, 152, 78, 0.16);
+}
 
     .room-card:hover .room-services {
       transform: translateX(0);
@@ -114,6 +131,7 @@
       border-radius: 12px;
       z-index: 1;
     }
+    
     .room-info {
       z-index: 1;
     }
