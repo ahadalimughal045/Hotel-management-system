@@ -3,126 +3,257 @@
 <head>
   <meta charset="UTF-8">
   <title>Auto Staff Scheduler</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Baloo Bhai 2', sans-serif;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background-color: #F0F4F7;
-      padding: 20px;
+      background: linear-gradient(135deg, #ECE6D9 60%, #879681 100%);
+      padding: 30px;
+      color: #33312E;
     }
 
     h2 {
-      color: #1F5E56;
       text-align: center;
+      color:#BC984E;
+      font-size: 2rem;
+      margin-bottom: 20px;
     }
 
     .container {
-      max-width: 900px;
+      max-width: 1000px;
       margin: auto;
+      background: rgba(255,255,255,0.95);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
     }
 
     button {
-      margin: 20px auto;
       display: block;
-      padding: 10px 20px;
-      background-color: #1F5E56;
-      color: white;
+      margin: 20px auto;
+      padding: 12px 30px;
+      background: linear-gradient(90deg, #BC984E 60%, #879681 100%);
+      color: #fff;
       border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
       cursor: pointer;
-      border-radius: 5px;
-      font-size: 16px;
-      transition: background-color 0.3s ease;
+      transition: background 0.3s, box-shadow 0.3s;
+      box-shadow: 0 2px 8px rgba(188, 152, 78, 0.08);
     }
 
     button:hover {
-      background-color: #154842;
+      background: linear-gradient(90deg, #879681 60%, #BC984E 100%);
+      box-shadow: 0 4px 16px rgba(188, 152, 78, 0.2);
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
+      margin-top: 30px;
     }
 
     th, td {
-      padding: 12px;
+      padding: 14px;
       border: 1px solid #ccc;
       text-align: center;
     }
 
-    th {
-      background-color: #1F5E56;
-      color: white;
-    }
+   th {
+  background: linear-gradient(90deg, #BC984E 60%, #879681 100%);
+  color: white;
+  font-weight: 600;
+  font-size: 1.05rem;
+  font-family: 'Baloo Bhai 2', sans-serif;
+}
+.back-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(90deg, #BC984E 60%, #879681 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(188, 152, 78, 0.08);
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+.back-btn:hover {
+  background: linear-gradient(90deg, #879681 60%, #BC984E 100%);
+  box-shadow: 0 4px 16px rgba(188, 152, 78, 0.16);
+}
+
 
     td {
-      background-color: #ffffff;
+      background-color: #fff;
+      font-size: 1rem;
     }
 
     .footer {
       text-align: center;
       margin-top: 30px;
-      color: #888;
+      color: #666;
       font-size: 14px;
     }
   </style>
 </head>
 <body>
+  <div class = "button">
+    <button class="back-btn" onclick="window.location.href='dashboard.html'">Back</button>
+  </div>
   <div class="container">
     <h2>AI-Based Auto Staff Scheduler</h2>
-    <button onclick="generateSchedule()">Generate Weekly Schedule</button>
+    <button onclick="generateSchedule()">Generate Daily Schedule</button>
 
     <table id="schedule-table">
-      <thead>
-        <tr>
-          <th>Staff Name</th>
-          <th>Role</th>
-          <th>Day</th>
-          <th>Shift</th>
-        </tr>
-      </thead>
+    <thead>
+  <tr>
+    <th>Staff Name</th>
+    <th>Role</th>
+    <th>Date</th>
+    <th>Shift</th>
+    <th>Shift Time</th>
+    <th>Room Type</th>
+    <th>Room No</th>
+  </tr>
+</thead>
+
+
       <tbody>
-        <!-- Rows inserted by JavaScript -->
+        <!-- JavaScript will fill rows -->
       </tbody>
     </table>
 
-    <div class="footer">Auto-generated based on staff availability & AI logic</div>
+    <div class="footer">Auto-generated schedule based on availability & AI logic</div>
   </div>
 
   <script>
-    const staffData = [
-      { name: "Ali", role: "Receptionist", availability: ["Morning", "Evening"] },
-      { name: "Sara", role: "Housekeeping", availability: ["Morning"] },
-      { name: "John", role: "Cook", availability: ["Evening", "Night"] },
-      { name: "Amna", role: "Security", availability: ["Night"] },
-      { name: "David", role: "Receptionist", availability: ["Morning", "Night"] },
-      { name: "Mina", role: "Cleaner", availability: ["Morning", "Evening"] },
-      { name: "Kamran", role: "Chef", availability: ["Evening"] }
-    ];
+ const staffData = [
+  {
+    name: "Ali",
+    role: "Receptionist",
+    availability: ["Morning", "Evening"],
+    dates: ["2025-07-10", "2025-07-11", "2025-07-12"],
+    time: { Morning: "08:00-12:00", Evening: "16:00-20:00" }
+  },
+  {
+    name: "Sara",
+    role: "Housekeeping",
+    availability: ["Morning"],
+    dates: ["2025-07-10", "2025-07-11", "2025-07-13"],
+    time: { Morning: "07:00-11:00" }
+  },
+  {
+    name: "John",
+    role: "Cook",
+    availability: ["Evening", "Night"],
+    dates: ["2025-07-11", "2025-07-12", "2025-07-13"],
+    time: { Evening: "15:00-19:00", Night: "20:00-00:00" }
+  },
+  {
+    name: "Amna",
+    role: "Security",
+    availability: ["Night"],
+    dates: ["2025-07-10", "2025-07-12"],
+    time: { Night: "22:00-06:00" }
+  },
+  {
+    name: "David",
+    role: "Receptionist",
+    availability: ["Morning", "Night"],
+    dates: ["2025-07-10", "2025-07-11", "2025-07-13"],
+    time: { Morning: "09:00-13:00", Night: "22:00-02:00" }
+  },
+  {
+    name: "Mina",
+    role: "Cleaner",
+    availability: ["Morning", "Evening"],
+    dates: ["2025-07-10", "2025-07-11", "2025-07-12"],
+    time: { Morning: "07:30-11:30", Evening: "15:30-19:30" }
+  },
+  {
+    name: "Kamran",
+    role: "Chef",
+    availability: ["Evening"],
+    dates: ["2025-07-11", "2025-07-13"],
+    time: { Evening: "14:00-18:00" }
+  }
+];
 
-    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-    const shifts = ["Morning", "Evening", "Night"];
+// Room mapping for each type
+const roomsByType = {
+  Premium: [101, 102, 103],
+  "Semi-Premium": [201, 202, 203],
+  Economy: [301, 302, 303]
+};
 
-    function generateSchedule() {
-      const tbody = document.querySelector("#schedule-table tbody");
-      tbody.innerHTML = "";
+const shifts = ["Morning", "Evening", "Night"];
+const roomTypes = Object.keys(roomsByType);
 
-      for (let day of days) {
-        for (let shift of shifts) {
-          const availableStaff = staffData.filter(s => s.availability.includes(shift));
+function getNext7Dates() {
+  const dates = [];
+  const today = new Date();
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(today);
+    date.setDate(today.getDate() + i);
+    dates.push(date.toISOString().split("T")[0]); // Format: YYYY-MM-DD
+  }
+  return dates;
+}
+
+function generateSchedule() {
+  const tbody = document.querySelector("#schedule-table tbody");
+  tbody.innerHTML = "";
+
+  const next7Days = getNext7Dates();
+
+  for (let date of next7Days) {
+    for (let shift of shifts) {
+      for (let type of roomTypes) {
+        const rooms = roomsByType[type];
+
+        for (let room of rooms) {
+          const availableStaff = staffData.filter(
+            s =>
+              s.availability.includes(shift) &&
+              s.dates.includes(date) &&
+              ["Cleaner", "Cook", "Chef", "Housekeeping"].includes(s.role) // ✅ Only allowed roles
+          );
+
           if (availableStaff.length === 0) continue;
 
           const selected = availableStaff[Math.floor(Math.random() * availableStaff.length)];
+
           const row = document.createElement("tr");
           row.innerHTML = `
             <td>${selected.name}</td>
             <td>${selected.role}</td>
-            <td>${day}</td>
+            <td>${date}</td>
             <td>${shift}</td>
+            <td>${selected.time[shift] || "N/A"}</td>
+            <td>${type}</td>
+            <td>${room}</td>
           `;
           tbody.appendChild(row);
         }
       }
     }
-  </script>
+  }
+}
+
+
+</script>
+
 </body>
 </html>
