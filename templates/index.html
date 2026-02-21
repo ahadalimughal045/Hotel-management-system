@@ -4,13 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HOTEL AURAZ</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="login-container">
     <div class="login-card">
       <h1 class="login-title">HOTEL AURAZ</h1>
+      <div style="margin-bottom: 1rem; color: #23645C; font-size: 1.05rem; text-align: center;">
+        <strong>Admin:</strong> Use your admin email and password.<br>
+        <strong>Customer:</strong> Use the email and password you received at booking to access your dashboard.
+      </div>
       <form id="loginForm">
         <label for="email">Email</label>
         <input type="email" id="email" name="email" required autocomplete="username">
@@ -22,8 +26,7 @@
       <div id="loginError" class="login-error"></div>
     </div>
   </div>
-  <script type="module" src="firebase-config.js"></script>
-<script type="module" src="script.js"></script>
- 
+  <!-- Link to the new login.js file -->
+  <script type="module" src="{{ url_for('static', filename='js/login.js') }}"></script>
 </body>
 </html>

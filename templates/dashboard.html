@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THE AURAZ HOTEL</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+
+<body>
+  <div id="homepage" class="home">
+
+    <div class="navbar">
+      <div class="logo">THE AURAZ HOTEL</div>
+      <div class="nav-links">
+        <button class="staff-btn" id="notificationBtn" onclick="toggleNotifications()">🔔 Notifications</button>
+        <button class="staff-btn" onclick="window.location.href='{{ url_for('staff_availability') }}'">Staff
+          Availability Form</button>
+        <button class="staff-btn" onclick="window.location.href='{{ url_for('staff_scheduler') }}'">Staff
+          Scheduler</button>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+      </div>
+    </div>
+
+    <!-- Notification Box -->
+    <div id="notificationBox"
+      style="display:none; position:fixed; top:110px; right:20px; width:300px; background:#fff; border:1px solid #ccc; padding:15px; box-shadow:0 0 10px rgba(0,0,0,0.1); z-index:1000; border-radius:10px;">
+      <h3 style="margin-bottom:10px; font-weight:600;">Recent Requests</h3>
+      <ul id="notificationList" style="max-height: 300px; overflow-y: auto; font-size:14px;"></ul>
+    </div>
+
+    <div class="main">
+      <!-- Room Cards -->
+      <div class="room-card" data-room-type="premium">
+        <div class="room-services">
+          <h4>Services</h4>
+          <ul>
+            <li>Private Balcony</li>
+            <li>Jacuzzi</li>
+            <li>Chef on Call</li>
+            <li>Butler Service</li>
+          </ul>
+        </div>
+        <img src="{{ url_for('static', filename='img/premium.jpeg') }}" alt="Premium Room">
+        <div class="room-info">
+          <h3>Premium Room</h3>
+          <p>Ocean view, king-size bed, jacuzzi, 24/7 service</p>
+        </div>
+      </div>
+
+      <div class="room-card" data-room-type="semi-premium">
+        <div class="room-services">
+          <h4>Services</h4>
+          <ul>
+            <li>Room Heater</li>
+            <li>Smart TV</li>
+            <li>Mini Fridge</li>
+            <li>Daily Cleaning</li>
+          </ul>
+        </div>
+        <img src="{{ url_for('static', filename='img/semi.jpeg') }}" alt="Semi Premium Room">
+        <div class="room-info">
+          <h3>Semi Premium Room</h3>
+          <p>City view, modern decor, free breakfast</p>
+        </div>
+      </div>
+
+      <div class="room-card" data-room-type="economy">
+        <div class="room-services">
+          <h4>Services</h4>
+          <ul>
+            <li>Wi-Fi</li>
+            <li>Fan</li>
+            <li>Shared Bathroom</li>
+            <li>Safe Box</li>
+          </ul>
+        </div>
+        <img src="{{ url_for('static', filename='img/eco.jpeg') }}" alt="Economy Room">
+        <div class="room-info">
+          <h3>Economy Room</h3>
+          <p>Compact, clean, value-for-money</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, query, orderBy, onSnapshot, deleteDoc, doc, updateDoc, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDtkwPjBxYz3ncg1u1K4uBoTURyfgf7mCk",
+      authDomain: "hotel-ms-web.firebaseapp.com",
+      projectId: "hotel-ms-web",
+      storageBucket: "hotel-ms-web.firebasestorage.app",
+      messagingSenderId: "745082112057",
+      appId: "1:745082112057:web:cf940d18c0dd3ef84fa5e8"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const notificationBtn = document.getElementById("notificationBtn");
+    const notificationList = document.getElementById("notificationList");
+
+    let medicalData = [];
+    let roomServiceData = [];
+    let foodOrderData = [];
+
+    const updateNotificationUI = () => {
+      notificationList.innerHTML = "";
+      const total = medicalData.length + roomServiceData.length + foodOrderData.length;
+
+      console.log("Updating notification UI:", {
+        medical: medicalData.length,
+        roomService: roomServiceData.length,
+        foodOrder: foodOrderData.length,
+        total: total
+      });
+
+      if (total > 0) {
+        notificationBtn.innerText = `🔔 Notifications (${total})`;
+      } else {
+        notificationBtn.innerText = `🔕 No Notifications`;
+      }
+
+      const createNotificationItem = (type, data, docId, collectionName) => {
+        const li = document.createElement("li");
+        const time = data.timestamp?.toDate().toLocaleString() || new Date().toLocaleString();
+
+        let roomLabel = data.roomType && data.roomNumber ? `${data.roomType.charAt(0).toUpperCase() + data.roomType.slice(1)}-${data.roomNumber}` : 'Unknown Room';
+
+        let content = ``;
+        if (type === "medical") {
+          content = `<strong>${data.type?.toUpperCase() || 'TYPE'}</strong>: ${data.message}<br>
+                   <small>Room: ${roomLabel}</small>`;
+        } else if (type === "room_service") {
+          content = `<strong>ROOM SERVICE</strong>: ${data.service || 'Service Requested'}<br>
+                   <small>Guest: ${data.name || 'Guest'} | Room: ${roomLabel}</small>`;
+        } else if (type === "food_order") {
+          const itemsList = data.items?.map(item => `${item.dish} (${item.size}) x${item.quantity}`).join(', ') || 'No items';
+          const customerName = data.userName || 'Guest';
+          const roomNumber = data.roomNumber || 'Unknown';
+          const roomType = data.roomType || '';
+          const roomDisplay = roomType ? `${roomType.charAt(0).toUpperCase() + roomType.slice(1)}-${roomNumber}` : `Room-${roomNumber}`;
+
+          content = `<strong>🍽️ FOOD ORDER</strong>: ${data.message}<br>
+                   <small>Items: ${itemsList}<br>
+                   Total: PKR ${data.totalAmount}<br>
+                   Guest: <strong>${customerName}</strong> | Room: <strong>${roomDisplay}</strong></small>`;
+        }
+
+        li.innerHTML = `${content}<br><small>${time}</small>`;
+
+        // Confirm button (removes from UI only, marks as confirmed in Firestore)
+        const confirmBtn = document.createElement("button");
+        confirmBtn.textContent = "Confirm";
+        confirmBtn.style = 'margin:8px 4px 4px 0; background:#38a169; color:#fff; border:none; border-radius:6px; padding:4px 12px; font-size:13px; cursor:pointer;';
+        confirmBtn.onclick = async () => {
+          await updateDoc(doc(db, collectionName, docId), { confirmed: true });
+          li.remove(); // Remove from UI
+        };
+
+        // Clear button (removes from UI and deletes from Firestore)
+        const clearBtn = document.createElement("button");
+        clearBtn.textContent = "Clear";
+        clearBtn.style = 'margin:8px 0 4px 0; background:#e53e3e; color:#fff; border:none; border-radius:6px; padding:4px 12px; font-size:13px; cursor:pointer;';
+        clearBtn.onclick = async () => {
+          await deleteDoc(doc(db, collectionName, docId));
+          li.remove();
+        };
+
+        li.appendChild(document.createElement('br'));
+        li.appendChild(confirmBtn);
+        li.appendChild(clearBtn);
+        li.appendChild(document.createElement('hr'));
+        notificationList.appendChild(li);
+      };
+
+      // Render all lists
+      medicalData.forEach(({ id, data }) => createNotificationItem("medical", data, id, "medicalRequests"));
+      roomServiceData.forEach(({ id, data }) => createNotificationItem("room_service", data, id, "room_services"));
+      foodOrderData.forEach(({ id, data }) => createNotificationItem("food_order", data, id, "foodRequests"));
+    };
+
+    // Fetch medical requests
+    const medQuery = query(collection(db, "medicalRequests"), orderBy("timestamp", "desc"));
+    onSnapshot(medQuery, (snapshot) => {
+      medicalData = snapshot.docs
+        .map((docSnap) => ({ id: docSnap.id, data: docSnap.data() }))
+        .filter(({ data }) => data.confirmed !== true);
+      updateNotificationUI();
+    });
+
+    // Fetch room service requests
+    const roomServiceQuery = query(collection(db, "room_services"), orderBy("timestamp", "desc"));
+    onSnapshot(roomServiceQuery, (snapshot) => {
+      roomServiceData = snapshot.docs
+        .map((docSnap) => ({ id: docSnap.id, data: docSnap.data() }))
+        .filter(({ data }) => data.confirmed !== true);
+      updateNotificationUI();
+    });
+
+    // Fetch food order requests
+    const foodOrderQuery = query(collection(db, "foodRequests"), orderBy("timestamp", "desc"));
+    onSnapshot(foodOrderQuery, (snapshot) => {
+      foodOrderData = snapshot.docs
+        .map((docSnap) => ({ id: docSnap.id, data: docSnap.data() }))
+        .filter(({ data }) => data.confirmed !== true);
+      console.log("Food requests updated:", foodOrderData.length, "requests");
+      updateNotificationUI();
+    });
+
+    // Toggle Notification Box
+    window.toggleNotifications = function () {
+      const box = document.getElementById('notificationBox');
+      box.style.display = box.style.display === 'none' || !box.style.display ? 'block' : 'none';
+    };
+  </script>
+
+  <!-- Optional: JS File -->
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+
+</html>

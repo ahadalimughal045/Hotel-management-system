@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Staff Availability</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@400;700&display=swap" rel="stylesheet">
+  <!-- ✅ Firebase CDN for Firestore -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #ECE6D9 60%, #879681 100%);
+      min-height: 100vh;
+      padding: 30px;
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      background: linear-gradient(90deg, #BC984E 60%, #879681 100%);
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background: linear-gradient(90deg, #879681 60%, #BC984E 100%);
+      transform: scale(1.05);
+    }
+
+    .form-container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      max-width: 480px;
+      margin: 80px auto 0 auto;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    h1 {
+      color: #BC984E;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    input, select {
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #BC984E;
+      outline: none;
+    }
+
+    button[type="submit"] {
+      background: linear-gradient(90deg, #BC984E 60%, #879681 100%);
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      margin-top: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+      transform: scale(1.05);
+      background: linear-gradient(90deg, #879681 60%, #BC984E 100%);
+    }
+
+    #success {
+      margin-top: 15px;
+      color: green;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media screen and (max-width: 500px) {
+      .form-container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1.4rem;
+      }
+
+      input, select, button {
+        font-size: 0.95rem;
+      }
+
+      .back-btn {
+        top: 15px;
+        right: 20px;
+        padding: 8px 16px;
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+   <!-- 🔙 Back Button Top Right -->
+   <button class="back-btn logout-btn" onclick="window.location.href='{{ url_for('dashboard') }}'">Back to Dashboard</button>
+   
+  <div class="form-container">
+    <h1>Staff Availability</h1>
+    <form id="availabilityForm">
+      <input type="text" id="staffName" placeholder="Staff Name" required />
+      <input type="text" id="staffRole" placeholder="Staff Role" required />
+      <input type="date" id="date" required />
+
+      <select id="shift" required>
+        <option value="">Select Shift</option>
+        <option value="Morning">Morning</option>
+        <option value="Evening">Evening</option>
+        <option value="Night">Night</option>
+      </select>
+
+      <input type="text" id="shiftTime" placeholder="Shift Time (e.g. 08:00 - 12:00)" required />
+      <input type="text" id="roomType" placeholder="Room Type (e.g. Premium)" />
+      <input type="text" id="roomNumber" placeholder="Room Number (e.g. 101)" />
+
+      <button type="submit">Submit</button>
+    </form>
+    <div id="success" style="display:none;">✅ Submitted Successfully!</div>
+  </div>
+
+  <script>
+    // ✅ Replace with your Firestore config
+  const firebaseConfig = {
+  apiKey: "AIzaSyA7Uyd0k4rVgqRx6jdeSTvXJlNuowSbZx4",
+  authDomain: "hotel-admin-807a3.firebaseapp.com",
+  projectId: "hotel-admin-807a3",
+  storageBucket: "hotel-admin-807a3.firebasestorage.app",
+  messagingSenderId: "569594137457",
+  appId: "1:569594137457:web:1cdb773e369fccb94784d0",
+  measurementId: "G-457WQG4RQK"
+};
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const form = document.getElementById("availabilityForm");
+    const successMessage = document.getElementById("success");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const staffData = {
+        name: document.getElementById("staffName").value,
+        role: document.getElementById("staffRole").value,
+        date: document.getElementById("date").value,
+        shift: document.getElementById("shift").value,
+        shiftTime: document.getElementById("shiftTime").value,
+        roomType: document.getElementById("roomType").value,
+        roomNumber: document.getElementById("roomNumber").value
+      };
+
+      try {
+        await db.collection("staffAvailability").add(staffData);
+        successMessage.style.display = "block";
+        form.reset();
+      } catch (error) {
+        alert("❌ Failed to submit: " + error.message);
+      }
+    });
+  </script>
+</body>
+</html>

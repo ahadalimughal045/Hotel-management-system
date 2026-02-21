@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Medical Service – Auraz Hotel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Poppins:wght@300;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: hwb(41 85% 7%);
+    }
+
+    h1,
+    h2 {
+      font-family: 'Playfair Display', serif;
+    }
+
+    .modal-bg {
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-card {
+      background: #fff;
+      border-radius: 1.5rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-main {
+      background: linear-gradient(90deg, #BC984E 60%, #879681 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.8rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s, box-shadow 0.3s;
+      box-shadow: 0 2px 6px rgba(188, 152, 78, 0.1);
+      white-space: nowrap;
+    }
+
+    .btn-main:hover {
+      background: linear-gradient(90deg, #879681 60%, #BC984E 100%);
+      box-shadow: 0 4px 14px rgba(188, 152, 78, 0.2);
+    }
+
+    .btn-cancel {
+      background: #e5e7eb;
+      color: #374151;
+      border-radius: 0.75rem;
+      font-weight: 500;
+    }
+
+    .btn-cancel:hover {
+      background: #d1d5db;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-6">
+
+  <div class="bg-white rounded-3xl shadow-2xl p-10 w-full max-w-lg text-center border border-blue-100">
+    <h1 class="text-4xl font-bold text-blue-900 mb-8 tracking-tight">Medical Services</h1>
+
+    <!-- Options -->
+    <div class="space-y-5">
+      <button onclick="confirmMedical('doctor')"
+        class="w-full btn-main py-4 text-lg flex items-center justify-center gap-2"><span>🩺</span> Doctor to Your Room
+        <span class="ml-2 text-blue-700 font-semibold">Rs. 2000</span></button>
+      <button onclick="showMedicines()"
+        class="w-full btn-main py-4 text-lg flex items-center justify-center gap-2"><span>💊</span> Order Medicine <span
+          class="ml-2 text-blue-700 font-semibold">Rs. 500</span></button>
+      <button onclick="confirmMedical('emergency')"
+        class="w-full btn-main py-4 text-lg flex items-center justify-center gap-2"><span>🚑</span> Emergency to
+        Hospital <span class="ml-2 text-blue-700 font-semibold">Rs. 5000</span></button>
+    </div>
+
+    <!-- Medicine List -->
+    <div id="medicineList" class="mt-8 hidden">
+      <h2 class="text-2xl font-semibold mb-4 text-blue-800">Select Medicine</h2>
+      <div class="space-y-3">
+        <button onclick="confirmMedical('medicine', 'Panadol')"
+          class="w-full bg-gray-200 hover:bg-gray-300 py-3 rounded-xl text-lg flex justify-between items-center">Panadol
+          <span class='text-blue-700 font-semibold'>Rs. 500</span></button>
+        <button onclick="confirmMedical('medicine', 'Brufen')"
+          class="w-full bg-gray-200 hover:bg-gray-300 py-3 rounded-xl text-lg flex justify-between items-center">Brufen
+          <span class='text-blue-700 font-semibold'>Rs. 500</span></button>
+        <button onclick="confirmMedical('medicine', 'Disprin')"
+          class="w-full bg-gray-200 hover:bg-gray-300 py-3 rounded-xl text-lg flex justify-between items-center">Disprin
+          <span class='text-blue-700 font-semibold'>Rs. 500</span></button>
+        <button onclick="confirmMedical('medicine', 'Arinac')"
+          class="w-full bg-gray-200 hover:bg-gray-300 py-3 rounded-xl text-lg flex justify-between items-center">Arinac
+          <span class='text-blue-700 font-semibold'>Rs. 500</span></button>
+      </div>
+    </div>
+
+    <!-- Message -->
+    <div id="message" class="mt-8 text-blue-800 font-medium text-lg"></div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div id="confirmModal" class="fixed inset-0 flex items-center justify-center z-50 hidden modal-bg">
+    <div class="modal-card p-8 max-w-md w-full text-center">
+      <h2 class="text-2xl font-semibold mb-4 text-blue-900">Confirm Request</h2>
+      <p id="confirmText" class="mb-6 text-gray-700"></p>
+      <div class="flex gap-4 justify-center">
+        <button id="confirmYes" class="btn-main px-6 py-2">Confirm</button>
+        <button id="confirmNo" class="btn-cancel px-6 py-2">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { getFirestore, collection, addDoc, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDtkwPjBxYz3ncg1u1K4uBoTURyfgf7mCk",
+      authDomain: "hotel-ms-web.firebaseapp.com",
+      projectId: "hotel-ms-web",
+      storageBucket: "hotel-ms-web.firebasestorage.app",
+      messagingSenderId: "745082112057",
+      appId: "1:745082112057:web:cf940d18c0dd3ef84fa5e8"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    function getUserInfo() {
+      const user = auth.currentUser;
+      if (user) {
+        return {
+          userId: user.uid,
+          userName: user.displayName || '',
+          userEmail: user.email || ''
+        };
+      }
+      return {};
+    }
+
+    async function getUserRoomInfo(uid) {
+      // Fetch user document from 'users' collection
+      try {
+        const userDoc = await getDoc(doc(db, "users", uid));
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          return {
+            roomType: data.room_type || null,
+            roomNumber: data.room_id || null
+          };
+        }
+      } catch (e) { console.error("Error fetching user room info", e); }
+      return { roomType: null, roomNumber: null };
+    }
+
+    // Confirmation modal logic
+    let pendingAction = null;
+    let pendingMedicine = null;
+    let pendingPrice = null;
+    const PRICES = {
+      doctor: 2000,
+      emergency: 5000,
+      medicine: 500
+    };
+    function confirmMedical(type, medicineName) {
+      let text = '';
+      let price = 0;
+      if (type === 'doctor') { text = 'Are you sure you want to request a doctor to your room? <br><b>Price: Rs. 2000</b>'; price = PRICES.doctor; }
+      else if (type === 'emergency') { text = 'Are you sure you want to request emergency hospital service? <br><b>Price: Rs. 5000</b>'; price = PRICES.emergency; }
+      else if (type === 'medicine') { text = `Are you sure you want to order medicine: <b>${medicineName}</b>? <br><b>Price: Rs. 500</b>`; price = PRICES.medicine; }
+      pendingAction = type;
+      pendingMedicine = medicineName || null;
+      pendingPrice = price;
+      document.getElementById('confirmText').innerHTML = text;
+      document.getElementById('confirmModal').classList.remove('hidden');
+    }
+    document.getElementById('confirmYes').onclick = async function () {
+      document.getElementById('confirmModal').classList.add('hidden');
+      if (pendingAction === 'doctor') await doctorToRoom();
+      else if (pendingAction === 'emergency') await emergencyToHospital();
+      else if (pendingAction === 'medicine') await deliverMedicine(pendingMedicine);
+      pendingAction = null; pendingMedicine = null; pendingPrice = null;
+    };
+    document.getElementById('confirmNo').onclick = function () {
+      document.getElementById('confirmModal').classList.add('hidden');
+      pendingAction = null; pendingMedicine = null; pendingPrice = null;
+    };
+
+    async function doctorToRoom() {
+      const userInfo = getUserInfo();
+      let roomInfo = { roomType: null, roomNumber: null };
+      if (userInfo.userId) {
+        roomInfo = await getUserRoomInfo(userInfo.userId);
+      }
+      const data = {
+        type: "doctor",
+        message: "Doctor is requested to the room.",
+        price: PRICES.doctor,
+        timestamp: new Date(),
+        ...userInfo,
+        roomType: roomInfo.roomType,
+        roomNumber: roomInfo.roomNumber
+      };
+      await addDoc(collection(db, "medicalRequests"), data);
+      document.getElementById('message').innerText = "🩺 A doctor is coming to your room within 5 minutes. (Rs. 2000)";
+      document.getElementById('medicineList').classList.add('hidden');
+    }
+    async function deliverMedicine(name) {
+      const userInfo = getUserInfo();
+      let roomInfo = { roomType: null, roomNumber: null };
+      if (userInfo.userId) {
+        roomInfo = await getUserRoomInfo(userInfo.userId);
+      }
+      const data = {
+        type: "medicine",
+        message: `Medicine \"${name}\" requested.`,
+        medicine: name,
+        price: PRICES.medicine,
+        timestamp: new Date(),
+        ...userInfo,
+        roomType: roomInfo.roomType,
+        roomNumber: roomInfo.roomNumber
+      };
+      await addDoc(collection(db, "medicalRequests"), data);
+      document.getElementById('message').innerText = `💊 Your required medicine \"${name}\" will be delivered to you within 5 minutes. (Rs. 500)`;
+      document.getElementById('medicineList').classList.add('hidden');
+    }
+    async function emergencyToHospital() {
+      const userInfo = getUserInfo();
+      let roomInfo = { roomType: null, roomNumber: null };
+      if (userInfo.userId) {
+        roomInfo = await getUserRoomInfo(userInfo.userId);
+      }
+      const data = {
+        type: "emergency",
+        message: "Emergency hospital request.",
+        price: PRICES.emergency,
+        timestamp: new Date(),
+        ...userInfo,
+        roomType: roomInfo.roomType,
+        roomNumber: roomInfo.roomNumber
+      };
+      await addDoc(collection(db, "medicalRequests"), data);
+      document.getElementById('medicineList').classList.add('hidden');
+      document.getElementById('message').innerText = "🚑 Ambulance will be ready in 5 minutes. We will check you as soon as possible. (Rs. 5000)";
+    }
+    window.confirmMedical = confirmMedical;
+    window.showMedicines = function () {
+      document.getElementById('medicineList').classList.remove('hidden');
+      document.getElementById('message').innerText = "";
+    };
+  </script>
+
+  <script>
+    function doctorToRoom() {
+      document.getElementById('message').innerText = "🩺 A doctor is coming to your room within 5 minutes.";
+      document.getElementById('medicineList').classList.add('hidden');
+    }
+
+    function showMedicines() {
+      document.getElementById('medicineList').classList.remove('hidden');
+      document.getElementById('message').innerText = "";
+    }
+
+    function deliverMedicine(name) {
+      document.getElementById('message').innerText = `💊 Your required medicine "${name}" will be delivered to you within 5 minutes.`;
+    }
+
+    function emergencyToHospital() {
+      document.getElementById('medicineList').classList.add('hidden');
+      document.getElementById('message').innerText = "🚑 Ambulance will be ready in 5 minutes. We will check you as soon as possible.";
+    }
+  </script>
+</body>
+
+</html>

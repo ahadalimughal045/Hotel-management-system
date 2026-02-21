@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Room Services – Auraz Hotel</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: hwb(41 85% 7%);
+      color: hsl(36, 5%, 19%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    h1 {
+      font-family: 'Baloo Bhai 2', cursive;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #BC984E;
+      margin-bottom: 1.5rem;
+    }
+
+    .service-box {
+      background-color: #ffffffcc;
+      border-radius: 1rem;
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      width: 100%;
+      max-width: 28rem;
+      text-align: center;
+      backdrop-filter: blur(5px);
+    }
+
+    .service-btn {
+      width: 100%;
+      background: linear-gradient(90deg, #BC984E 60%, #879681 100%);
+      color: #fff;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s, box-shadow 0.3s;
+      box-shadow: 0 2px 6px rgba(188, 152, 78, 0.1);
+      margin-bottom: 1rem;
+    }
+
+    .service-btn:hover {
+      background: linear-gradient(90deg, #879681 60%, #BC984E 100%);
+      box-shadow: 0 4px 14px rgba(188, 152, 78, 0.2);
+    }
+
+    #message {
+      margin-top: 1.5rem;
+      color: #1e3a8a;
+      font-weight: 500;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="service-box">
+    <h1>Room Services</h1>
+
+    <div>
+      <button onclick="roomService('Room Cleaning')" class="service-btn">🧹 Room Cleaning</button>
+      <button onclick="roomService('Extra Pillow')" class="service-btn">🛏️ Extra Pillow</button>
+      <button onclick="roomService('Towel Replacement')" class="service-btn">🧼 Towel Replacement</button>
+      <button onclick="roomService('Wake-Up Call')" class="service-btn">⏰ Wake-Up Call</button>
+      <button onclick="roomService('General Help')" class="service-btn">📞 General Help</button>
+    </div>
+
+    <div id="message"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      query,
+      where,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDtkwPjBxYz3ncg1u1K4uBoTURyfgf7mCk",
+      authDomain: "hotel-ms-web.firebaseapp.com",
+      projectId: "hotel-ms-web",
+      storageBucket: "hotel-ms-web.firebasestorage.app",
+      messagingSenderId: "745082112057",
+      appId: "1:745082112057:web:cf940d18c0dd3ef84fa5e8"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Room Service Function
+    window.roomService = async function (service) {
+      const messageEl = document.getElementById('message');
+
+      const confirmRequest = confirm(`Do you want to request "${service}" service to your room?`);
+
+      if (!confirmRequest) {
+        messageEl.innerText = "❌ Service request cancelled.";
+        return;
+      }
+
+      messageEl.innerText = `⏳ Requesting "${service}"... please wait.`; // Loading message
+
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          const uid = user.uid;
+
+          try {
+            const bookingsRef = collection(db, "rooms");
+            const q = query(bookingsRef, where("customer_uid", "==", uid));
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+              const bookingDoc = querySnapshot.docs[0];
+              const data = bookingDoc.data();
+
+              const name = data.customer_name || 'Guest';
+              const roomNumber = data.room_number || 'Unknown';
+              const roomType = data.type || 'Standard';
+
+              // Save room service request
+              await addDoc(collection(db, "room_services"), {
+                name,
+                roomNumber,
+                roomType,
+                service,
+                customer_uid: uid,
+                timestamp: new Date()
+              });
+
+              console.log("Room service saved successfully.");
+              messageEl.innerText = `✅ "${service}" request sent successfully! Our staff will assist you shortly.`;
+            } else {
+              console.error("No room found for this user.");
+              messageEl.innerText = "❌ No room booking found for your account.";
+            }
+
+          } catch (error) {
+            console.error("Error fetching room or saving service:", error);
+            messageEl.innerText = "❌ Failed to send service request.";
+          }
+        } else {
+          alert("Please log in to request room service.");
+        }
+      });
+    };
+  </script>
+
+
+</body>
+
+</html>

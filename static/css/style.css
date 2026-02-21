@@ -1,0 +1,145 @@
+/* Original style.css for login and forgot password pages */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Baloo Bhai 2', 'Segoe UI', Arial, sans-serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(../img/bg.jpg); /* Adjusted path for Flask static files */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.3;
+  z-index: -1;
+}
+
+body {
+  background: hwb(41 85% 7%);
+  color: hsl(36, 5%, 19%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.login-card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 6px 32px rgba(44, 44, 44, 0.12);
+  padding: 2.5rem 2rem;
+  min-width: 340px;
+  max-width: 90vw;
+  border: 2px solid #C3C6BF;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn 0.8s ease-out;
+}
+
+.login-title {
+  color: #BC984E;
+  margin-bottom: 1.5rem;
+  font-size: 2.1rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-size: 1rem;
+  color: #33312E;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+input[type="email"],
+input[type="password"] {
+  padding: 0.8rem 1rem;
+  margin-bottom: 1.2rem;
+  border: 1px solid #C3C6BF;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #33312E;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: #BC984E;
+  box-shadow: 0 0 0 3px rgba(188, 152, 78, 0.2);
+  outline: none;
+}
+
+.login-btn,
+.forgot-btn {
+  background: linear-gradient(90deg, #BC984E 60%, #879681 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(188, 152, 78, 0.08);
+  margin-top: 1rem;
+}
+
+.login-btn:hover,
+.forgot-btn:hover {
+  background: linear-gradient(90deg, #879681 60%, #BC984E 100%);
+  box-shadow: 0 4px 16px rgba(188, 152, 78, 0.16);
+}
+
+.forgot-btn {
+  background: #C3C6BF; /* A slightly different background for distinction */
+  margin-top: 0.8rem;
+}
+
+.forgot-btn:hover {
+  background: #aeb1aa;
+}
+
+.login-error {
+  color: #D32F2F;
+  background: #FFEBEE;
+  border: 1px solid #D32F2F;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+  display: none;
+  font-size: 0.98rem;
+  text-align: center;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

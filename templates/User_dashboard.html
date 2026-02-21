@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auraz Hotel</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Poppins:wght@300;500;600&display=swap"
+    rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: 'Playfair Display', serif
+    }
+
+    .fade-enter {
+      opacity: 0;
+      transform: translateY(1rem)
+    }
+
+    .fade-enter-active {
+      opacity: 1;
+      transform: translateY(0);
+      transition: all .4s
+    }
+  </style>
+</head>
+
+<body class="bg-gray-900">
+
+  <!-- ===== NAVBAR ===== -->
+  <header class="absolute inset-x-0 top-0 z-20">
+    <div class="flex justify-between items-center px-8 py-6 text-white">
+      <h1 class="text-3xl font-semibold drop-shadow">Auraz</h1>
+      <nav class="space-x-8 text-lg">
+        <a href="#services" class="hover:text-yellow-400">Services</a>
+        <a href="#about" class="hover:text-yellow-400">About</a>
+        <a href="{{ url_for('profile') }}" id="openProfile" class="hover:text-yellow-400">Profile</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="relative h-screen w-full bg-cover bg-center"
+    style="background-image:url('https://image-tc.galaxy.tf/wijpeg-6rc902e9t312jljywldrat8xl/york-pool-dusk-ok.jpg?width=1920')">
+    <div class="absolute inset-0 bg-black/60"></div>
+    <div class="relative z-10 h-full flex flex-col justify-center items-center text-center text-white px-4">
+      <h2 class="text-5xl md:text-6xl font-semibold mb-4 drop-shadow">Welcome to Auraz Hotel</h2>
+      <p class="text-2xl text-yellow-300 mb-10 drop-shadow">Luxury &amp; cloud‑powered comfort</p>
+    </div>
+  </section>
+
+  <!-- ===== SERVICES (NEW) ===== -->
+  <section id="services" class="py-24 bg-gray-100">
+    <h3 class="text-3xl font-semibold text-center mb-12 text-blue-900">Our Services</h3>
+    <div class="max-w-6xl mx-auto grid sm:grid-cols-2 lg:grid-cols-3 gap-10 px-6">
+      <!-- Medical -->
+      <a href="{{ url_for('medical') }}" class="group relative block rounded-3xl overflow-hidden shadow-lg">
+        <img src="{{ url_for('static', filename='img/medical.jpg') }}" alt="">
+        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition"></div>
+        <span
+          class="absolute inset-x-0 bottom-0 text-center text-xl font-semibold text-white py-4 bg-gradient-to-t from-black/80 to-transparent">Medical</span>
+      </a>
+      <!-- Food -->
+      <a href="{{ url_for('food') }}" class="group relative block rounded-3xl overflow-hidden shadow-lg">
+        <img src="https://images.unsplash.com/photo-1551782450-a2132b4ba21d?auto=format&fit=crop&w=800&q=80" alt=""
+          class="h-64 w-full object-cover transition-transform duration-500 group-hover:scale-110">
+        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition"></div>
+        <span
+          class="absolute inset-x-0 bottom-0 text-center text-xl font-semibold text-white py-4 bg-gradient-to-t from-black/80 to-transparent">Food</span>
+      </a>
+      <!-- Room -->
+      <a href="{{ url_for('room') }}" class="group relative block rounded-3xl overflow-hidden shadow-lg">
+        <img src="{{ url_for('static', filename='img/room1.jpg') }}" alt=""
+          class="h-64 w-full object-cover transition-transform duration-500 group-hover:scale-110">
+        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition"></div>
+        <span
+          class="absolute inset-x-0 bottom-0 text-center text-xl font-semibold text-white py-4 bg-gradient-to-t from-black/80 to-transparent">Room</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section id="about" class="py-20 bg-white text-center px-6">
+    <h3 class="text-3xl font-semibold mb-4 text-blue-900">About Auraz</h3>
+    <p class="max-w-3xl mx-auto text-gray-700">
+      Auraz is a cloud‑native hotel management platform that simplifies bookings, guest engagement, and billing.
+    </p>
+  </section>
+
+  <footer class="bg-blue-950 text-white text-center py-4">
+    &copy; 2025 Auraz Hotel. All rights reserved.
+  </footer>
+
+  <!-- ===== Firebase (Modular SDK) ===== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDtkwPjBxYz3ncg1u1K4uBoTURyfgf7mCk",
+      authDomain: "hotel-ms-web.firebaseapp.com",
+      projectId: "hotel-ms-web",
+      storageBucket: "hotel-ms-web.firebasestorage.app",
+      messagingSenderId: "745082112057",
+      appId: "1:745082112057:web:cf940d18c0dd3ef84fa5e8"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("Customer logged in:", user.email);
+        // Profile load logic yahan ya profile.html mein automatically handle hogi
+      } else {
+        window.location.href = '/';
+      }
+    });
+
+    // Profile link already redirects to /profile which handles its own data.
+  </script>
+</body>
+
+</html>

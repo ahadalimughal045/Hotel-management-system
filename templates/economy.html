@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Economy Room Booking - Admin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/room.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
+</head>
+<body>
+
+  <header>
+    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Hotel Logo">
+  </header>
+
+  <button class="back-btn" onclick="window.location.href='{{ url_for('dashboard') }}'">Back</button>
+
+  <h2>Economy Room Booking - Admin View</h2>
+
+  <div class="buttons">
+    <button onclick="filterRooms('All')">Show All</button>
+    <button onclick="filterRooms('Available')">Only Available</button>
+    <button onclick="filterRooms('Booked')">Only Booked</button>
+    <button onclick="showCustomConfirm('resetAllBookings', 'Reset all Economy room bookings?', 'economy')">Reset All Bookings</button>
+  </div>
+
+  <div class="summary" id="summary"></div>
+  <div id="room-container"></div>
+
+  <!-- Custom Modal for Alerts and Confirms -->
+  <div id="customModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button" onclick="closeCustomModal()">&times;</span>
+      <p id="modalMessage"></p>
+      <div id="modalButtons" class="modal-buttons">
+        <!-- Buttons will be dynamically added here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden input to pass room type to JS -->
+  <input type="hidden" id="roomType" value="economy">
+
+  <!-- Link to the new room-booking.js file -->
+  <script src="{{ url_for('static', filename='js/modal.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/room-booking.js') }}"></script>
+  <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA7Uyd0k4rVgqRx6jdeSTvXJlNuowSbZx4",
+  authDomain: "hotel-admin-807a3.firebaseapp.com",
+  projectId: "hotel-admin-807a3",
+  storageBucket: "hotel-admin-807a3.firebasestorage.app",
+  messagingSenderId: "569594137457",
+  appId: "1:569594137457:web:1cdb773e369fccb94784d0",
+  measurementId: "G-457WQG4RQK"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// After room details are loaded, show bill summary for assigned customer
+async function showRoomBillSummary(roomData) {
+  const summaryDiv = document.getElementById('summary');
+  if (!roomData || !roomData.customer_uid) {
+    summaryDiv.innerHTML = '<div class="p-3 bg-yellow-50 rounded">No customer assigned to this room.</div>';
+    return;
+  }
+  const roomPrice = Number(roomData.price) || 0;
+  const roomType = roomData.type || 'Economy';
+  const customerUid = roomData.customer_uid;
+  let totalMedicalBill = 0;
+  let totalFoodBill = 0;
+  // Fetch medical and food bills
+  const [medSnap, foodSnap] = await Promise.all([
+    getDocs(query(collection(db, 'medicalRequests'), where('userId', '==', customerUid))),
+    getDocs(query(collection(db, 'foodRequests'), where('userId', '==', customerUid)))
+  ]);
+  medSnap.forEach(doc => {
+    const data = doc.data();
+    if (data.price) totalMedicalBill += Number(data.price);
+  });
+  foodSnap.forEach(doc => {
+    const data = doc.data();
+    if (data.totalAmount) {
+      totalFoodBill += Number(data.totalAmount);
+    } else if (data.price) {
+      totalFoodBill += Number(data.price);
+    }
+  });
+  const grandTotal = roomPrice + totalMedicalBill + totalFoodBill;
+  summaryDiv.innerHTML = `<div class='mb-4 p-4 rounded-lg bg-yellow-50 border border-yellow-200'>
+    <span class='font-medium text-xl'>Total Bill (Room + Medical + Food):</span> <span class='font-bold text-red-700 text-xl'>Rs. ${grandTotal}</span>
+    <div class='mt-2 text-base'>
+      <div><span class='font-medium'>Room Charges (${roomType}):</span> <span class='font-bold text-blue-900'>Rs. ${roomPrice}</span></div>
+      <div><span class='font-medium'>Total Medical Services Bill:</span> <span class='font-bold text-blue-900'>Rs. ${totalMedicalBill}</span></div>
+      <div><span class='font-medium'>Total Food Services Bill:</span> <span class='font-bold text-green-900'>Rs. ${totalFoodBill}</span></div>
+    </div>
+  </div>`;
+}
+
+// Example: call showRoomBillSummary after loading a room's data
+// Replace this with your actual room data loading logic
+window.showRoomBillSummary = showRoomBillSummary;
+</script>
+</body>
+</html>

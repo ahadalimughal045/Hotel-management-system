@@ -1,0 +1,17 @@
+# Firebase Keys
+serviceAccountKey.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venc/
+.env
+
+# Flask
+instance/
+.pytest_cache/
+
+# OS specific
+.DS_Store
+Thumbs.db

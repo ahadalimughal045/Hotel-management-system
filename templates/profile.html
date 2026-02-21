@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile - Auraz Hotel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Dashboard ke fonts ko import karein -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Dashboard ki CSS file ko link karein -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+  <style>
+    /* Custom styles for profile page to integrate with dashboard.css */
+    /* Body background dashboard.css se aayega */
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      /* Poppins font ko default rakhein, Baloo Bhai 2 headings ke liye */
+      font-family: 'Poppins', sans-serif;
+    }
+    /* Background image ko remove karein */
+    body::before {
+      content: none;
+    }
+    h1, h2, h3, h4 {
+      font-family: 'Baloo Bhai 2', sans-serif;
+      color: #BC984E; /* Dashboard logo/nav color */
+    }
+    .profile-container {
+      /* Dashboard ke main container jaisa look */
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      overflow-y: auto;
+      padding-bottom: 30px;
+      align-items: center;
+      width: 100%;
+      flex: 1;
+      padding: 20px; /* home class padding */
+    }
+    .profile-card {
+      /* room-card jaisi styling */
+      width: 100%;
+      max-width: 600px;
+      background-color: #fff; /* Opacity 100% ke liye solid white */
+      border-radius: 12px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+      padding: 20px;
+      display: flex;
+      flex-direction: column; /* Content ko column mein rakhein */
+      gap: 15px;
+      transition: all 0.5s ease;
+      color: hsl(36, 5%, 19%); /* Dashboard ka default text color */
+    }
+    .profile-card p, .profile-card span {
+      color: hsl(36, 5%, 19%); /* Ensure text color matches */
+    }
+    .profile-card .font-medium {
+      color: #BC984E; /* Highlight important text with golden brown */
+    }
+    .profile-card .text-green-600 { /* Status ke liye */
+      color: #38a169; /* Tailwind green, ya dashboard ke theme se match karein */
+    }
+    .profile-card .text-red-600 { /* Error messages ke liye */
+      color: #e53e3e; /* Tailwind red */
+    }
+    .profile-card .italic {
+      color: hsl(36, 5%, 30%); /* Thoda dark italic text */
+    }
+    /* Navbar styles dashboard.css se override honge */
+    .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background-color: hwb(41 85% 7%); /* Dashboard navbar background */
+        backdrop-filter: blur(8px);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 40px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .navbar .logo {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #BC984E; /* Dashboard logo color */
+        font-family: 'Baloo Bhai 2', sans-serif;
+        white-space: nowrap;
+    }
+    .navbar .nav-links {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .navbar .nav-links a {
+        background: linear-gradient(90deg, #BC984E 60%, #879681 100%);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 0.6rem 1.8rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s, box-shadow 0.3s;
+        box-shadow: 0 2px 6px rgba(188, 152, 78, 0.1);
+        white-space: nowrap;
+        text-decoration: none; /* Remove underline from links */
+    }
+    .navbar .nav-links a:hover {
+        background: linear-gradient(90deg, #879681 60%, #BC984E 100%);
+        box-shadow: 0 4px 14px rgba(188, 152, 78, 0.2);
+    }
+    .navbar .nav-links .font-bold.underline {
+        text-decoration: underline;
+        background: linear-gradient(90deg, #879681 60%, #BC984E 100%); /* Active link ka background */
+    }
+    /* Footer styles dashboard.css ke body background se match karein */
+    footer {
+        background-color: hwb(41 85% 7%); /* Dashboard body background */
+        font-family: ballo bhai 2, sans-serif; /* Dashboard footer font */
+        color: #000000; /* Footer text color ko visible karein */
+        padding: 1rem;
+        text-align: center;
+        margin-top: auto; /* Footer ko bottom par push karein */
+        border-top: 1px solid rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body class=""> <!-- bg-gray-100 class hata di hai -->
+  <!-- Navbar ko dashboard.html se copy karein -->
+  <header class="navbar">
+    <div class="logo">THE AURAZ HOTEL</div>
+    <div class="nav-links">
+      <a href="{{ url_for('user_dashboard') }}">Home</a>
+      <a href="{{ url_for('profile') }}" class="font-bold underline">Profile</a>
+      <a href="/" onclick="logout(); return false;">Logout</a>
+    </div>
+  </header>
+
+  <main class="profile-container">
+    <div class="profile-card">
+      <h2 class="text-2xl font-semibold mb-6">My Profile</h2>
+      <div id="profileInfo" class="space-y-3 mb-8">
+        <p>Loading profile...</p>
+      </div>
+      <div id="bookingInfo" class="space-y-3">
+        <h3 class="text-xl font-semibold mb-2">Latest Booking</h3>
+        <p>Loading booking...</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class=""> <!-- text-white class hata di hai -->
+    &copy; 2025 Auraz Hotel. All rights reserved.
+  </footer>
+
+  <!-- Firebase SDK Imports (Modular) -->
+  <script type="module">
+    import { app, auth, db } from './static/js/firebase-config.js'; 
+    import { signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"; 
+
+    console.log("Profile page script started.");
+
+    function logout() {
+      signOut(auth).then(() => { 
+        window.location.href = '/logout'; 
+      }).catch((error) => {
+        console.error("Error signing out:", error);
+        window.location.href = '/logout'; 
+      });
+    }
+
+    const profileDiv = document.getElementById('profileInfo');
+    const bookingDiv = document.getElementById('bookingInfo');
+    profileDiv.innerHTML = '<p>Checking authentication status...</p>';
+    bookingDiv.innerHTML = '';
+
+    auth.onAuthStateChanged(async user => {
+      console.log("onAuthStateChanged triggered.");
+
+      if (user) {
+        console.log("User is SIGNED IN:", user);
+        profileDiv.innerHTML = `<p>Welcome, ${user.displayName || user.email}! Fetching details...</p>`;
+        let roomPrice = 0;
+        let roomType = '';
+        let roomNumber = '';
+        try {
+          console.log("Fetching room data for UID:", user.uid);
+          const roomsRef = collection(db, 'rooms'); 
+          const q = query(roomsRef, where('customer_uid', '==', user.uid)); 
+          const roomSnap = await getDocs(q); 
+          console.log("Firestore query finished. Found documents:", roomSnap.size);
+
+          if (roomSnap.empty) {
+            profileDiv.innerHTML = `
+              <p><span class="font-medium">Name:</span> ${user.displayName || '—'}</p>
+              <p><span class="font-medium">Email:</span> ${user.email}</p>
+              <p class="mt-4 italic">No booking information found for this account.</p>
+            `;
+          } else {
+            // Get the latest booking (assuming last doc is latest)
+            let latestRoom = null;
+            roomSnap.forEach(doc => {
+              latestRoom = doc.data();
+            });
+            if (latestRoom) {
+              roomPrice = Number(latestRoom.price) || 0;
+              roomType = latestRoom.type || '';
+              roomNumber = latestRoom.room_number || '';
+            }
+            let html = `
+              <p><span class="font-medium">Name:</span> ${user.displayName || '—'}</p>
+              <p><span class="font-medium">Email:</span> ${user.email}</p>
+              <h4 class="text-lg font-semibold mt-6 mb-2">Your Booked Room Details:</h4>
+            `;
+            roomSnap.forEach(doc => {
+              const roomData = doc.data();
+              html += `
+                <div class="border p-4 rounded-lg bg-blue-50 mb-4">
+                  <p><span class="font-medium">Room Number:</span> ${roomData.room_number}</p>
+                  <p><span class="font-medium">Room Type:</span> ${roomData.type}</p>
+                  <p><span class="font-medium">Status:</span> <span class="text-green-600">${roomData.status}</span></p>
+                  <p><span class="font-medium">Price:</span> Rs. ${roomData.price}</p>
+                  <p><span class="font-medium">Customer Name:</span> ${roomData.customer_name || 'N/A'}</p>
+                  <p><span class="font-medium">Customer Contact:</span> ${roomData.customer_contact || 'N/A'}</p>
+                  <p><span class="font-medium">Customer CNIC:</span> ${roomData.customer_cnic || 'N/A'}</p>
+                  <p><span class="font-medium">Booking Time:</span> ${roomData.booking_time ? new Date(roomData.booking_time.toDate()).toLocaleString() : 'N/A'}</p>
+                </div>
+              `;
+            });
+            profileDiv.innerHTML = html;
+          }
+        } catch (err) {
+          console.error("Error fetching Firestore data:", err);
+          profileDiv.innerHTML = '<p class="text-red-600">Failed to load profile information.</p>';
+        }
+        // Fetch and display total medical bill
+        let totalMedicalBill = 0;
+        try {
+          const medRef = collection(db, 'medicalRequests');
+          const medQ = query(medRef, where('userId', '==', user.uid));
+          const medSnap = await getDocs(medQ);
+          medSnap.forEach(doc => {
+            const data = doc.data();
+            if (data.price) totalMedicalBill += Number(data.price);
+          });
+        } catch (err) {
+          console.error("Error fetching medical bill:", err);
+        }
+        // Fetch and display total food bill
+        let totalFoodBill = 0;
+        try {
+          const foodRef = collection(db, 'foodRequests');
+          const foodQ = query(foodRef, where('userId', '==', user.uid));
+          const foodSnap = await getDocs(foodQ);
+          foodSnap.forEach(doc => {
+            const data = doc.data();
+            if (data.totalAmount) {
+              totalFoodBill += Number(data.totalAmount);
+            } else if (data.price) {
+              totalFoodBill += Number(data.price);
+            }
+          });
+        } catch (err) {
+          console.error("Error fetching food bill:", err);
+        }
+        // Calculate grand total
+        const grandTotal = roomPrice + totalMedicalBill + totalFoodBill;
+        // Show grand total and breakdown
+        let totalHtml = `<div class='mb-4 p-4 rounded-lg bg-yellow-50 border border-yellow-200'>
+          <span class='font-medium text-xl'>Total Bill (Room + Medical + Food):</span> <span class='font-bold text-red-700 text-xl'>Rs. ${grandTotal}</span>
+          <div class='mt-2 text-base'>
+            <div><span class='font-medium'>Room Charges (${roomType || 'N/A'}):</span> <span class='font-bold text-blue-900'>Rs. ${roomPrice}</span></div>
+            <div><span class='font-medium'>Total Medical Services Bill:</span> <span class='font-bold text-blue-900'>Rs. ${totalMedicalBill}</span></div>
+            <div><span class='font-medium'>Total Food Services Bill:</span> <span class='font-bold text-green-900'>Rs. ${totalFoodBill}</span></div>
+          </div>
+        </div>`;
+        profileDiv.innerHTML = totalHtml + profileDiv.innerHTML;
+        bookingDiv.innerHTML = '';
+      } else {
+        console.log("User is SIGNED OUT.");
+        profileDiv.innerHTML = '<p class="text-red-600">You must be logged in to view your profile.</p>';
+        bookingDiv.innerHTML = '';
+      }
+    });
+
+    console.log("Script finished. Waiting for onAuthStateChanged.");
+  </script>
+</body>
+</html>

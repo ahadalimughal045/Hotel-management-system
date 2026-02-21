@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Food Menu – Auraz Hotel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Poppins:wght@300;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: hwb(41 85% 7%);
+    }
+
+    h1,
+    h2 {
+      font-family: 'Playfair Display', serif;
+    }
+
+    .modal-bg {
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-card {
+      background: #fff;
+      border-radius: 1.5rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-main {
+      background: linear-gradient(90deg, #BC984E 60%, #879681 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.8rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s, box-shadow 0.3s;
+      box-shadow: 0 2px 6px rgba(188, 152, 78, 0.1);
+      white-space: nowrap;
+    }
+
+    .btn-main:hover {
+      background: linear-gradient(90deg, #879681 60%, #BC984E 100%);
+      box-shadow: 0 4px 14px rgba(188, 152, 78, 0.2);
+    }
+
+    .btn-cancel {
+      background: #e5e7eb;
+      color: #374151;
+      border-radius: 0.75rem;
+      font-weight: 500;
+    }
+
+    .btn-cancel:hover {
+      background: #d1d5db;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen p-8">
+  <div class="max-w-5xl mx-auto bg-white shadow-xl rounded-lg p-6">
+    <h1 class="text-4xl font-bold text-center text-blue-900 mb-6">🍽️ Full Food Menu</h1>
+
+    <!-- Menu Sections -->
+    <div class="space-y-6">
+
+      <!-- Desi Section -->
+      <div>
+        <h2 class="text-2xl font-semibold text-yellow-700 mb-2">🍛 Desi</h2>
+        <table class="w-full table-auto border text-sm">
+          <thead>
+            <tr class="bg-yellow-100">
+              <th>Dish</th>
+              <th>Full</th>
+              <th>Half</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Chicken Karahi</td>
+              <td>PKR 800</td>
+              <td>PKR 450</td>
+            </tr>
+            <tr>
+              <td>Biryani</td>
+              <td>PKR 400</td>
+              <td>PKR 250</td>
+            </tr>
+            <tr>
+              <td>Chapli Kabab</td>
+              <td>PKR 300</td>
+              <td>PKR 180</td>
+            </tr>
+            <tr>
+              <td>Daal Fry</td>
+              <td>PKR 350</td>
+              <td>PKR 200</td>
+            </tr>
+            <tr>
+              <td>Chicken Handi</td>
+              <td>PKR 850</td>
+              <td>PKR 500</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Italian Section -->
+      <div>
+        <h2 class="text-2xl font-semibold text-red-700 mb-2">🍝 Italian</h2>
+        <table class="w-full table-auto border text-sm">
+          <thead>
+            <tr class="bg-red-100">
+              <th>Dish</th>
+              <th>Small</th>
+              <th>Medium</th>
+              <th>Large</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Margherita Pizza</td>
+              <td>PKR 500</td>
+              <td>PKR 800</td>
+              <td>PKR 1100</td>
+            </tr>
+            <tr>
+              <td>Lasagna</td>
+              <td>PKR 550</td>
+              <td>PKR 850</td>
+              <td>PKR 1200</td>
+            </tr>
+            <tr>
+              <td>Fettuccine Alfredo</td>
+              <td>PKR 600</td>
+              <td>PKR 900</td>
+              <td>PKR 1250</td>
+            </tr>
+            <tr>
+              <td>Bruschetta</td>
+              <td>PKR 250</td>
+              <td>PKR 400</td>
+              <td>PKR 550</td>
+            </tr>
+            <tr>
+              <td>Pasta Carbonara</td>
+              <td>PKR 580</td>
+              <td>PKR 850</td>
+              <td>PKR 1100</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Chinese Section -->
+      <div>
+        <h2 class="text-2xl font-semibold text-green-700 mb-2">🥡 Chinese</h2>
+        <table class="w-full table-auto border text-sm">
+          <thead>
+            <tr class="bg-green-100">
+              <th>Dish</th>
+              <th>Small</th>
+              <th>Medium</th>
+              <th>Large</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Chicken Manchurian</td>
+              <td>PKR 550</td>
+              <td>PKR 800</td>
+              <td>PKR 1050</td>
+            </tr>
+            <tr>
+              <td>Kung Pao Chicken</td>
+              <td>PKR 600</td>
+              <td>PKR 850</td>
+              <td>PKR 1100</td>
+            </tr>
+            <tr>
+              <td>Spring Rolls</td>
+              <td>PKR 200</td>
+              <td>PKR 300</td>
+              <td>PKR 400</td>
+            </tr>
+            <tr>
+              <td>Chow Mein</td>
+              <td>PKR 500</td>
+              <td>PKR 700</td>
+              <td>PKR 900</td>
+            </tr>
+            <tr>
+              <td>Szechuan Chicken</td>
+              <td>PKR 580</td>
+              <td>PKR 820</td>
+              <td>PKR 1080</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Fast Food Section -->
+      <div>
+        <h2 class="text-2xl font-semibold text-blue-700 mb-2">🍔 Fast Food & Deals</h2>
+        <table class="w-full table-auto border text-sm">
+          <thead>
+            <tr class="bg-blue-100">
+              <th>Item</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Cheeseburger</td>
+              <td>PKR 350</td>
+            </tr>
+            <tr>
+              <td>Fried Chicken (2 pcs)</td>
+              <td>PKR 400</td>
+            </tr>
+            <tr>
+              <td>Club Sandwich</td>
+              <td>PKR 300</td>
+            </tr>
+            <tr>
+              <td>Loaded Fries</td>
+              <td>PKR 280</td>
+            </tr>
+            <tr>
+              <td>Deal 1: Zinger + Fries + Drink</td>
+              <td>PKR 650</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Tandoor -->
+      <div>
+        <h2 class="text-2xl font-semibold text-pink-700 mb-2">🔥 Tandoor</h2>
+        <table class="w-full table-auto border text-sm">
+          <thead>
+            <tr class="bg-pink-100">
+              <th>Item</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Roghni Naan</td>
+              <td>PKR 50</td>
+            </tr>
+            <tr>
+              <td>Garlic Naan</td>
+              <td>PKR 60</td>
+            </tr>
+            <tr>
+              <td>Plain Naan</td>
+              <td>PKR 40</td>
+            </tr>
+            <tr>
+              <td>Chapatti</td>
+              <td>PKR 30</td>
+            </tr>
+            <tr>
+              <td>Paratha</td>
+              <td>PKR 70</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Beverages -->
+      <div>
+        <h2 class="text-2xl font-semibold text-purple-700 mb-2">🥤 Beverages</h2>
+        <table class="w-full table-auto border text-sm">
+          <thead>
+            <tr class="bg-purple-100">
+              <th>Item</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Coca-Cola (500ml)</td>
+              <td>PKR 80</td>
+            </tr>
+            <tr>
+              <td>Sprite (500ml)</td>
+              <td>PKR 80</td>
+            </tr>
+            <tr>
+              <td>Mango Juice</td>
+              <td>PKR 100</td>
+            </tr>
+            <tr>
+              <td>Mineral Water</td>
+              <td>PKR 50</td>
+            </tr>
+            <tr>
+              <td>7up (Can)</td>
+              <td>PKR 90</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Desserts -->
+      <div>
+        <h2 class="text-2xl font-semibold text-orange-700 mb-2">🍰 Desserts</h2>
+        <table class="w-full table-auto border text-sm">
+          <thead>
+            <tr class="bg-orange-100">
+              <th>Item</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Gulab Jamun (2 pcs)</td>
+              <td>PKR 120</td>
+            </tr>
+            <tr>
+              <td>Ice Cream (Scoop)</td>
+              <td>PKR 100</td>
+            </tr>
+            <tr>
+              <td>Chocolate Cake</td>
+              <td>PKR 250</td>
+            </tr>
+            <tr>
+              <td>Fruit Custard</td>
+              <td>PKR 180</td>
+            </tr>
+            <tr>
+              <td>Kheer</td>
+              <td>PKR 160</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- Order Section -->
+    <div class="mt-10">
+      <h2 class="text-2xl font-bold text-blue-900 mb-4">📝 Order Now</h2>
+      <div class="mb-4 p-3 bg-blue-50 rounded-lg text-sm text-blue-700">
+        <strong>How to order:</strong> Click "Add Dish" → Select a dish → Choose size → Enter quantity → Click "Place
+        Order"
+      </div>
+      <div id="orderRows" class="space-y-4"></div>
+      <button onclick="addRow()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-2">Add
+        Dish</button>
+
+      <div class="mt-4 font-semibold text-lg">Total: <span id="totalAmount">PKR 0</span></div>
+      <button onclick="submitOrder()" class="mt-4 bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700">Place
+        Order</button>
+
+      <div id="orderMessage" class="mt-4 text-green-700 font-medium"></div>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div id="confirmModal" class="fixed inset-0 flex items-center justify-center z-50 hidden modal-bg">
+    <div class="modal-card p-8 max-w-md w-full text-center">
+      <h2 class="text-2xl font-semibold mb-4 text-blue-900">Confirm Order</h2>
+      <p id="confirmText" class="mb-6 text-gray-700"></p>
+      <div class="flex gap-4 justify-center">
+        <button id="confirmYes" class="btn-main px-6 py-2">Confirm</button>
+        <button id="confirmNo" class="btn-cancel px-6 py-2">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { getFirestore, collection, addDoc, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDtkwPjBxYz3ncg1u1K4uBoTURyfgf7mCk",
+      authDomain: "hotel-ms-web.firebaseapp.com",
+      projectId: "hotel-ms-web",
+      storageBucket: "hotel-ms-web.firebasestorage.app",
+      messagingSenderId: "745082112057",
+      appId: "1:745082112057:web:cf940d18c0dd3ef84fa5e8"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    function getUserInfo() {
+      const user = auth.currentUser;
+      if (user) {
+        return {
+          userId: user.uid,
+          userName: user.displayName || '',
+          userEmail: user.email || ''
+        };
+      }
+      return {};
+    }
+
+    async function getUserRoomInfo(uid) {
+      // Fetch user document from 'users' collection
+      try {
+        const userDoc = await getDoc(doc(db, "users", uid));
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          return {
+            roomType: data.room_type || null,
+            roomNumber: data.room_id || null
+          };
+        }
+      } catch (e) { console.error("Error fetching user room info", e); }
+      return { roomType: null, roomNumber: null };
+    }
+
+    const prices = {
+      "Chicken Karahi": { Full: 800, Half: 450 },
+      "Biryani": { Full: 400, Half: 250 },
+      "Chapli Kabab": { Full: 300, Half: 180 },
+      "Daal Fry": { Full: 350, Half: 200 },
+      "Chicken Handi": { Full: 850, Half: 500 },
+      "Margherita Pizza": { Small: 500, Medium: 800, Large: 1100 },
+      "Lasagna": { Small: 550, Medium: 850, Large: 1200 },
+      "Fettuccine Alfredo": { Small: 600, Medium: 900, Large: 1250 },
+      "Bruschetta": { Small: 250, Medium: 400, Large: 550 },
+      "Pasta Carbonara": { Small: 580, Medium: 850, Large: 1100 },
+      "Chicken Manchurian": { Small: 550, Medium: 800, Large: 1050 },
+      "Kung Pao Chicken": { Small: 600, Medium: 850, Large: 1100 },
+      "Spring Rolls": { Small: 200, Medium: 300, Large: 400 },
+      "Chow Mein": { Small: 500, Medium: 700, Large: 900 },
+      "Szechuan Chicken": { Small: 580, Medium: 820, Large: 1080 },
+      "Cheeseburger": { Deal: 350 },
+      "Fried Chicken (2 pcs)": { Deal: 400 },
+      "Club Sandwich": { Deal: 300 },
+      "Loaded Fries": { Deal: 280 },
+      "Deal 1: Zinger + Fries + Drink": { Deal: 650 },
+      "Roghni Naan": { Single: 50 },
+      "Garlic Naan": { Single: 60 },
+      "Plain Naan": { Single: 40 },
+      "Chapatti": { Single: 30 },
+      "Paratha": { Single: 70 },
+      "Coca-Cola (500ml)": { Single: 80 },
+      "Sprite (500ml)": { Single: 80 },
+      "Mango Juice": { Single: 100 },
+      "Mineral Water": { Single: 50 },
+      "7up (Can)": { Single: 90 },
+      "Gulab Jamun (2 pcs)": { Single: 120 },
+      "Ice Cream (Scoop)": { Single: 100 },
+      "Chocolate Cake": { Single: 250 },
+      "Fruit Custard": { Single: 180 },
+      "Kheer": { Single: 160 }
+    };
+
+    const orderContainer = document.getElementById('orderRows');
+    const totalAmount = document.getElementById('totalAmount');
+    const orderMsg = document.getElementById('orderMessage');
+
+    function addRow() {
+      const row = document.createElement('div');
+      row.className = 'flex flex-wrap gap-2 items-center';
+
+      const dishSelect = document.createElement('select');
+      dishSelect.className = 'p-2 border rounded';
+      dishSelect.innerHTML = `<option disabled selected>Select Dish</option>` + Object.keys(prices).map(d => `<option value="${d}">${d}</option>`).join('');
+      row.appendChild(dishSelect);
+
+      const sizeSelect = document.createElement('select');
+      sizeSelect.className = 'p-2 border rounded';
+      sizeSelect.innerHTML = '<option disabled selected>Select Size</option>';
+      row.appendChild(sizeSelect);
+
+
+      const qtyInput = document.createElement('input');
+      qtyInput.type = 'number';
+      qtyInput.placeholder = 'Qty';
+      qtyInput.min = 1;
+      qtyInput.className = 'p-2 border w-20 rounded';
+      row.appendChild(qtyInput);
+
+      const priceDisplay = document.createElement('div');
+      priceDisplay.className = 'w-32 font-semibold';
+      priceDisplay.innerText = 'PKR 0';
+      row.appendChild(priceDisplay);
+
+      const removeBtn = document.createElement('button');
+      removeBtn.innerText = '❌';
+      removeBtn.onclick = () => {
+        row.remove();
+        calculateTotal();
+      };
+      row.appendChild(removeBtn);
+
+      dishSelect.onchange = () => {
+        const options = prices[dishSelect.value];
+        sizeSelect.innerHTML = '';
+        Object.keys(options).forEach(size => {
+          sizeSelect.innerHTML += `<option value="${size}">${size}</option>`;
+        });
+        calculateTotal();
+      };
+
+      [sizeSelect, qtyInput].forEach(el => el.onchange = calculateTotal);
+
+      orderContainer.appendChild(row);
+    }
+
+    function calculateTotal() {
+      let total = 0;
+      orderContainer.querySelectorAll('div').forEach(row => {
+        const selects = row.querySelectorAll('select');
+        const inputs = row.querySelectorAll('input');
+        const priceEl = row.querySelector('div.w-32');
+
+        if (selects.length === 2 && inputs.length === 1 && priceEl) {
+          const dishVal = selects[0].value;
+          const sizeVal = selects[1].value;
+          const qtyVal = parseInt(inputs[0].value);
+
+          if (dishVal && sizeVal && qtyVal > 0) {
+            const itemPrice = prices[dishVal][sizeVal] * qtyVal;
+            priceEl.innerText = 'PKR ' + itemPrice;
+            total += itemPrice;
+          } else {
+            priceEl.innerText = 'PKR 0';
+          }
+        }
+      });
+
+      totalAmount.innerText = 'PKR ' + total;
+    }
+
+    async function submitOrder() {
+      const orderItems = [];
+      let total = 0;
+
+      console.log("Starting order submission...");
+
+      orderContainer.querySelectorAll('div').forEach((row, index) => {
+        const selects = row.querySelectorAll('select');
+        const inputs = row.querySelectorAll('input');
+
+        if (selects.length === 2 && inputs.length === 1) {
+          const dishVal = selects[0].value;
+          const sizeVal = selects[1].value;
+          const qtyVal = parseInt(inputs[0].value) || 0;
+
+          if (dishVal && dishVal !== 'Select Dish' && sizeVal && sizeVal !== 'Select Size' && qtyVal > 0) {
+            const price = prices[dishVal][sizeVal];
+            const totalPrice = price * qtyVal;
+            total += totalPrice;
+            orderItems.push({
+              dish: dishVal,
+              size: sizeVal,
+              quantity: qtyVal,
+              unitPrice: price,
+              total: totalPrice
+            });
+          }
+        }
+      });
+
+      if (orderItems.length > 0) {
+        try {
+          // Get current user info
+          const userInfo = getUserInfo();
+          let roomInfo = { roomType: null, roomNumber: null };
+
+          if (userInfo.userId) {
+            roomInfo = await getUserRoomInfo(userInfo.userId);
+          }
+
+          // Create the food request document (like medicalRequests)
+          const data = {
+            type: "food_order",
+            message: `Food order placed with ${orderItems.length} items`,
+            items: orderItems,
+            totalAmount: total,
+            price: total, // For consistency with medical system
+            timestamp: new Date(),
+            ...userInfo,
+            roomType: roomInfo.roomType,
+            roomNumber: roomInfo.roomNumber
+          };
+
+          console.log("Saving food request to Firestore...");
+          await addDoc(collection(db, "foodRequests"), data);
+
+          orderMsg.innerText = "✅ You have ordered successfully. It will be delivered to your room in 30–40 minutes.";
+          totalAmount.innerText = "PKR 0";
+          orderContainer.innerHTML = "";
+          console.log("Order completed successfully!");
+        } catch (err) {
+          console.error("Error saving order:", err);
+          orderMsg.innerText = "❌ Error placing order. Please try again. Check console for details.";
+        }
+      } else {
+        orderMsg.innerText = "⚠️ Please add at least one dish to order. Make sure to select a dish, size, and enter quantity.";
+      }
+    }
+
+    window.addRow = addRow;
+    window.submitOrder = submitOrder;
+  </script>
+</body>
+
+</html>
